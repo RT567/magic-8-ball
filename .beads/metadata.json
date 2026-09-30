@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "magic_8_ball",
+  "project_id": "3c9ee1c2-ca62-457d-8bd9-60ea2c69202d"
+}
