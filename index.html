@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Magic 8-Ball</title>
+  <meta name="description" content="Ask the Magic 8-Ball a question. Give it a shake. It knows.">
+  <meta name="theme-color" content="#1c0a0e">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Magic 8-Ball">
+  <meta property="og:title" content="Magic 8-Ball">
+  <meta property="og:description" content="Ask it a question. Give it a shake. It knows.">
+  <meta property="og:url" content="https://rt567.github.io/magic-8-ball/">
+  <meta property="og:image" content="https://rt567.github.io/magic-8-ball/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="A glossy black Magic 8-Ball">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=Fraunces:ital,opsz,wght@0,9..144,400..800;1,9..144,400..600&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="stage" id="stage">
+    <h1 class="sr-only">Magic 8-Ball</h1>
+    <div class="orb" id="orb">
+      <button class="ball" id="ball" type="button" data-side="eight" aria-label="Think of a question, then shake the Magic 8-Ball">
+        <span class="ball__body">
+          <span class="face face--eight" aria-hidden="true">
+            <svg viewBox="0 0 100 100"><text x="50" y="53" text-anchor="middle" dominant-baseline="central">8</text></svg>
+          </span>
+          <span class="face face--window" aria-hidden="true">
+            <span class="window__murk"></span>
+            <span class="window__whisper" id="whisper"></span>
+            <span class="die" id="die"></span>
+            <span class="window__flash" id="flash"></span>
+            <span class="bubbles"><i></i><i></i><i></i><i></i><i></i><i></i></span>
+            <span class="window__vignette"></span>
+            <span class="window__glass"></span>
+          </span>
+        </span>
+        <span class="ball__shine" aria-hidden="true"></span>
+      </button>
+      <span class="floor-shadow" aria-hidden="true"></span>
+    </div>
+    <p class="hint" id="hint" aria-hidden="true">tap to shake</p>
+    <p class="sr-only" id="announce" aria-live="polite"></p>
+  </main>
+
+  <script src="codec.js"></script>
+  <script src="die.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

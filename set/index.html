@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Magic 8-Ball</title>
+  <meta name="robots" content="noindex">
+  <meta name="description" content="Ask the Magic 8-Ball a question. Give it a shake. It knows.">
+  <meta name="theme-color" content="#1c0a0e">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=Fraunces:ital,opsz,wght@0,9..144,400..800;1,9..144,400..600&display=swap">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="set.css">
+</head>
+<body>
+  <main class="stage stage--set">
+    <h1 class="sr-only">Rig the Magic 8-Ball</h1>
+    <div class="orb orb--mini" aria-hidden="true">
+      <div class="ball" data-side="window">
+        <span class="ball__body">
+          <span class="face face--window">
+            <span class="die up" id="die"></span>
+            <span class="window__vignette"></span>
+            <span class="window__glass"></span>
+          </span>
+        </span>
+        <span class="ball__shine"></span>
+      </div>
+      <span class="floor-shadow"></span>
+    </div>
+
+    <section class="rig">
+      <div class="rig__head">
+        <label for="answer">What should it say?</label>
+        <span class="rig__count" id="count">0 / 80</span>
+      </div>
+      <textarea id="answer" rows="2" enterkeyhint="done" spellcheck="true"
+                placeholder="Type the answer&hellip;"></textarea>
+
+      <div class="out" id="out" hidden>
+        <label class="sr-only" for="link">Share link</label>
+        <input id="link" class="out__link" type="text" readonly>
+        <div class="out__actions">
+          <button type="button" class="btn btn--primary" id="copy">Copy link</button>
+          <button type="button" class="btn" id="share" hidden>Share&hellip;</button>
+          <a class="btn" id="try" href="../" target="_blank" rel="noopener">Try it</a>
+        </div>
+      </div>
+      <p class="fine">Every shake of that link gives this answer. It's scrambled in the link, not secret.</p>
+    </section>
+  </main>
+
+  <script src="../codec.js"></script>
+  <script src="../die.js"></script>
+  <script src="set.js"></script>
+</body>
+</html>
