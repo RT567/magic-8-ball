@@ -58,12 +58,18 @@
     ms.textContent = text;
 
     var limit = H * 0.9;
-    var maxFs = H * 0.16, minFs = H * 0.052;
+    var maxFs = H * 0.2, minFs = H * 0.052;
 
-    function measure() {
+    var target = H * 0.63;         // just above the centroid (2/3 down), where the eye puts the middle
+    // How far off-centre a larger font may sit. Sitting a little low is fine (that's the wide
+    // part of the triangle, and a long first word can only go there); sitting high is not.
+    var above = H * 0.05, below = H * 0.12;
+
+    function measure(pad) {
+      mw.style.paddingTop = pad + 'px';
       var base = m.getBoundingClientRect();
       var rects = ms.getClientRects();
-      if (!rects.length) return { top: 0, bottom: 0, fits: true };
+      if (!rects.length) return { centre: target, fits: true, pad: pad };
       var top = Infinity, bottom = -Infinity, inside = true;
       for (var i = 0; i < rects.length; i++) {
         var r = rects[i];
@@ -71,28 +77,45 @@
         bottom = Math.max(bottom, r.bottom - base.top);
         if (r.left - base.left < -1 || r.right - base.left > W + 1) inside = false;
       }
-      return { top: top, bottom: bottom, fits: inside && bottom <= limit };
+      return { centre: (top + bottom) / 2, fits: inside && bottom <= limit, pad: pad };
     }
 
-    var fs = minFs, broken = false, found = false;
-    for (var pass = 0; pass < 2 && !found; pass++) {
+    // For one font size, find the top padding that best centres the text while still fitting.
+    // Padding can't lift lines the floats push down (nothing fits near the apex), and moving
+    // down widens the lines so the text reflows, so scan rather than compute.
+    function place() {
+      var best = null, step = H / 32;
+      for (var p = 0; p <= limit; p += step) {
+        var c = measure(p);
+        if (c.fits && (!best || Math.abs(c.centre - target) < Math.abs(best.centre - target))) best = c;
+        if (c.centre > target + below) break;   // only gets lower from here
+      }
+      return best;
+    }
+
+    var fs = minFs, pad = 0, broken = false, chosen = null, fallback = null;
+    for (var pass = 0; pass < 2 && !chosen; pass++) {
       broken = pass === 1;
       mw.classList.toggle('die__words--break', broken);
       for (var f = maxFs; f >= minFs; f *= 0.94) {
         mw.style.fontSize = f + 'px';
-        mw.style.paddingTop = '0px';
-        if (measure().fits) { fs = f; found = true; break; }
+        var b = place();
+        if (!b) continue;
+        if (!fallback) fallback = { fs: f, pad: b.pad, broken: broken };
+        if (b.centre >= target - above && b.centre <= target + below) { chosen = { fs: f, pad: b.pad, broken: broken }; break; }
       }
     }
-    if (!found) { fs = minFs; broken = true; }
+    chosen = chosen || fallback || { fs: minFs, pad: 0, broken: true };
+    fs = chosen.fs; pad = chosen.pad; broken = chosen.broken;
+    // fine-tune the padding around the coarse pick
     mw.style.fontSize = fs + 'px';
     mw.classList.toggle('die__words--break', broken);
-
-    // Nudge the block down toward the triangle's visual centre without overflowing.
-    var a = measure();
-    var pad = Math.max(0, Math.min(H * 0.6 - (a.top + a.bottom) / 2, limit - a.bottom));
-    mw.style.paddingTop = pad + 'px';
-    if (!measure().fits) pad = 0;
+    var fine = measure(pad);
+    for (var q = Math.max(0, pad - H / 32); q <= pad + H / 32; q += H / 192) {
+      var c2 = measure(q);
+      if (c2.fits && (!fine.fits || Math.abs(c2.centre - target) < Math.abs(fine.centre - target))) fine = c2;
+    }
+    if (fine.fits) pad = fine.pad;
     document.body.removeChild(m);
 
     words.style.fontSize = fs + 'px';
